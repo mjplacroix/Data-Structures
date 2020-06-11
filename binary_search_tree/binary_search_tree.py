@@ -9,6 +9,7 @@ This part of the project comprises two days:
 2. Implement the `in_order_print`, `bft_print`, and `dft_print` methods
    on the BSTNode class.
 """
+from linked_list import LinkedList, Stack, Queue
 
 class BSTNode:
     def __init__(self, value):
@@ -40,19 +41,14 @@ class BSTNode:
     # False if it does not
     def contains(self, target):
         # if target == value return
-        print("\n", target, self.value)
         if target == self.value:
-            print("TRUE: ", target, self.value)
-            """ it's printing out both 7s, so why isn't True returning? """
             return True
         # elif target < value 
         elif target < self.value:
             # if node.left exists
             if self.left:
-                print("LEFT: ", self.left)
                 # traverse left
-                self.value = self.left
-                self.value.contains(target)
+                return self.left.contains(target)
             # else return False
             else:
                 return False
@@ -60,71 +56,90 @@ class BSTNode:
         elif target > self.value:
             # if node.right exists
             if self.right:
-                print("RIGHT: ", self.right.value)
                 # traverse right
-                self.value = self.right
-                self.value.contains(target)
+                return self.right.contains(target)
             # else return False
             else:
                 return False
 
     # Return the maximum value found in the tree
     def get_max(self):
-        print("\nVal: ", self.value)
         # if node has a right
-        max = self.value
         if self.right:
-            print("Right: ", self.right.value)
             #   traverse that
-            # self.value = self.right
-            max = self.right.value
-            self.right.get_max()
-        # else return node
-        # else:
-        #     print("MAX", self.value)
-        #     """ it's printing out 30, so why isn't 30 getting returned? """
-        #     return 
-        return max
-            # return int(self.value)
-            # return BSTNode(self.value)
-            # return BSTNode(self.value).value
-
+            return self.right.get_max()
+        return self.value
 
     # Call the function `fn` on the value of each node
     """ what is/where is "fn" coming from? It's not a function, it's a parameter..."""
     def for_each(self, fn):
         # if self.value, call fn
-        print(self.value)
         if self.value:
-            print("A")
-            return self.value
+            fn(self.value)
         # if self.left, recurse on self left
         if self.left:
-            print("B")
-            self.value = self.left
-            self.value.fn()
+            self.left.for_each(fn)
         # if self. right, recurse on self right
         if self.right:
-            print("C")
-            self.value = self.right
-            self.value.fn()
+            self.right.for_each(fn)
 
     # Part 2 -----------------------
-
     # Print all the values in order from low to high
     # Hint:  Use a recursive, depth first traversal
+    def get_min(self):
+            # if node has a right
+            if self.left:
+                #   traverse that
+                return self.left.get_min()
+            return self.value
+
     def in_order_print(self, node):
-        pass
+        if node == None:
+                return
+        self.in_order_print(node.left)
+        print(node.value)
+        self.in_order_print(node.right)       
+        
+        # queue = Queue()
+        # queue.enqueue(node)        
+        
+        # while queue:
+        #     value = queue.dequeue()
+        #     node.in_order_print(node.left)
+        #     queue.enqueue(node)
+        #     if value.left == None:
+        #     # check for a deeper left value recursively
+        #         print(value.value)
+        #     if value.left:
+        #         value.left.get_min() 
+        #     if:
+        #         value.right.get_min() 
 
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self, node):
-        pass
+        self.queue = Queue()
+        self.queue.enqueue(node)
+        while self.queue:
+            value = self.queue.dequeue()
+            print(value.value)
+            if value.left:
+                self.queue.enqueue(value.left)
+            if value.right:
+                self.queue.enqueue(value.right)
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self, node):
-        pass
+        self.stack = Stack()
+        self.stack.push(node)
+        while self.stack:
+            value = self.stack.pop()
+            print(value.value)
+            if value.left:
+                self.stack.push(value.left)
+            if value.right:
+                self.stack.push(value.right)
 
     # Stretch Goals -------------------------
     # Note: Research may be required
